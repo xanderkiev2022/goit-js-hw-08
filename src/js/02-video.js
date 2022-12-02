@@ -1,24 +1,45 @@
 import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
-const iframe = document.querySelector('iframe');    // Шукаємо iframe
-const player = new Player(iframe);                  // створюємо екземпляр класу Плеєр
+const iframe = document.querySelector('iframe'); // Шукаємо iframe
+const player = new Player(iframe); // створюємо екземпляр класу Плеєр
+// const STORAGE_KEY = 'videoplayer-current-time'; // вводимо константу для зберігання ключа
+const lastSavedTime = localStorage.getItem('videoplayer-current-time');
 
-console.log('iframe:', iframe);
+// console.log(lastSavedTime);
 
-console.log('player:', player);
+player.on('timeupdate', onTimedUpdate(data));
 
+function onTimedUpdate(e) {
+  localStorage.setItem(LOCALSTORAGE_KEY, e.seconds);
+}
 
+const onPlay = function (data) {
+  // data is an object containing properties specific to that event
+};
 
-// const onPlay = function(data) {
-//     // data is an object containing properties specific to that event
-// };
-// console.log('onPlay:', onPlay);
+// setCurrentTime();
+
+player
+  .setCurrentTime(lastSavedTime)
+  .then(function (seconds) {
+    // seconds = the actual time that the player seeked to
+  })
+  .catch(function (error) {
+    switch (error.name) {
+      case 'RangeError':
+        // the time was less than 0 or greater than the video’s duration
+        break;
+
+      default:
+        // some other error occurred
+        break;
+    }
+  });
 
 // player.on('play', onPlay);
 
-
-
-// 
+//
 
 // player.setColor('#00adef').then(function(color) {
 //     // color = #000000;
@@ -27,14 +48,13 @@ console.log('player:', player);
 //     // an error occurred setting the color
 // });
 
-
 // player.getCurrentTime().then(function(seconds) {
 //     // seconds = the current playback position
 // }).catch(function(error) {
 //     // an error occurred
 // });
 
-// 
+//
 
 // const output = document.querySelector("#output");
 // const LOCALSTORAGE_KEY = "goit-example-message";
