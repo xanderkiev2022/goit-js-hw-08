@@ -1,74 +1,33 @@
+                                                        // Коментрарі написані з навчальною метою
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
 
-const iframe = document.querySelector('iframe'); // Шукаємо iframe
-const player = new Player(iframe); // створюємо екземпляр класу Плеєр
-const STORAGE_KEY = 'videoplayer-current-time'; // вводимо константу для зберігання ключа
-const lastSavedTime = localStorage.getItem('videoplayer-current-time');
+const iframe = document.querySelector('iframe');
+const player = new Player(iframe);                      // Створюємо екземпляр класу Player
+const STORAGE_KEY = 'videoplayer-current-time';         // Придумали ключ сховища
 
-player.on('timeupdate', onTimedUpdate(data));
-
-function onTimedUpdate(e) {
-  localStorage.setItem(STORAGE_KEY, e.seconds);
-}
-
-const onPlay = function (data) {
-  // data is an object containing properties specific to that event
+const onSaveTime = function (data) {                    // Зберігаємо в локальне сховище сек відтворення
+  localStorage.setItem(STORAGE_KEY, +data.seconds);
+  console.log('seconds: ' + data.seconds);
 };
 
-// setCurrentTime();
+player.on('timeupdate', throttle(onSaveTime, 1000));    // Вішаємо слахача подій та запускаємо функцію збереження
 
-player
-  .setCurrentTime(lastSavedTime)
-  .then(function (seconds) {
-    // seconds = the actual time that the player seeked to
-  })
-  .catch(function (error) {
-    switch (error.name) {
-      case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
+const lastSavedTime = localStorage.getItem(STORAGE_KEY);
+// console.log('lastSavedTime: ', lastSavedTime);
+player.setCurrentTime(lastSavedTime);                   // Записуємо зі сховища сек де зупинилося відео
 
-      default:
-        // some other error occurred
-        break;
-    }
-  });
+// Завдання
 
-// player.on('play', onPlay);
-
-//
-
-// player.setColor('#00adef').then(function(color) {
-//     // color = #000000;
-//     // the color that was set
-// }).catch(function(error) {
-//     // an error occurred setting the color
-// });
-
-// player.getCurrentTime().then(function(seconds) {
-//     // seconds = the current playback position
-// }).catch(function(error) {
-//     // an error occurred
-// });
-
-//
-
-// const output = document.querySelector("#output");
-// const LOCALSTORAGE_KEY = "goit-example-message";
-
-// updateOutput();
-// form.addEventListener("submit", saveMessage);
-
-// function saveMessage(evt) {
-//   evt.preventDefault();
-//   localStorage.setItem(LOCALSTORAGE_KEY, form.elements.message.value);
-//   updateOutput();
-//   form.reset();
-// }
-
-// const savedTime = localStorage.getItem
-
-// function updateOutput() {
-//   output.textContent = localStorage.getItem(LOCALSTORAGE_KEY) || "";
-// }
+// Ознайомся з документацією бібліотеки Vimeo плеєра.
+// Додай бібліотеку як залежність проекту через npm.
+// Ініціалізуй плеєр у файлі скрипта як це описано в секції pre-existing player,
+// але враховуй, що у тебе плеєр доданий як npm пакет, а не через CDN.
+// Вивчи документацію методу on() і почни відстежувати подію timeupdate -
+// оновлення часу відтворення.
+// Зберігай час відтворення у локальне сховище. Нехай ключем для сховища буде
+// рядок "videoplayer-current-time".
+// Під час перезавантаження сторінки скористайся методом setCurrentTime() з метою відновлення 
+// відтворення зі збереженої позиції.
+// Додай до проекту бібліотеку lodash.throttle і зроби так, щоб час відтворення оновлювався у 
+// сховищі не частіше, ніж раз на секунду.
