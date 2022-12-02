@@ -3,15 +3,13 @@ import throttle from 'lodash.throttle';
 
 const iframe = document.querySelector('iframe'); // Шукаємо iframe
 const player = new Player(iframe); // створюємо екземпляр класу Плеєр
-// const STORAGE_KEY = 'videoplayer-current-time'; // вводимо константу для зберігання ключа
+const STORAGE_KEY = 'videoplayer-current-time'; // вводимо константу для зберігання ключа
 const lastSavedTime = localStorage.getItem('videoplayer-current-time');
-
-// console.log(lastSavedTime);
 
 player.on('timeupdate', onTimedUpdate(data));
 
 function onTimedUpdate(e) {
-  localStorage.setItem(LOCALSTORAGE_KEY, e.seconds);
+  localStorage.setItem(STORAGE_KEY, e.seconds);
 }
 
 const onPlay = function (data) {
